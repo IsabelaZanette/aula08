@@ -16,6 +16,15 @@ public class MensagemController {
 
     private List<Message> mensagens = new ArrayList<>();
 
+    @GetMapping("/{ID}")
+    public ResponseEntity<Message> listarID(@PathVariable int ID){
+        if (ID < 0 || ID >= mensagens.size()){
+            return ResponseEntity.badRequest().build();
+        }
+        Message msg = mensagens.get(ID);
+        return ResponseEntity.ok(msg);
+    }
+
     @GetMapping
     public ResponseEntity<List<Message>> listar(){
         if (mensagens.isEmpty()) {
@@ -31,21 +40,23 @@ public class MensagemController {
     }
 
     @DeleteMapping("/{index}")
-    public String remover(@PathVariable int index) {
+    public ResponseEntity<Message> deleteMessage(@PathVariable int index) {
         if (index >= 0 && index < mensagens.size()) {
+            Message msg = mensagens.get(index);
             mensagens.remove(index);
-            return "Mensagem removida!";
+            return ResponseEntity.ok(msg);
         }
 
-        return "Índice inválido ou array vazio!";
+        return ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/{index}")
-    public String update(@PathVariable int index, @RequestBody Message mensagem) {
+    public ResponseEntity<Message> updateMessage(@PathVariable int index, @RequestBody Message mensagem) {
         if (index >= 0 && index < mensagens.size()) {
             mensagens.set(index, mensagem);
-            return "Mensagem removida!";
+            Message msg = mensagens.get(index);
+            return ResponseEntity.ok(msg);
         }
-        return "AAAAAAAAAA";
+        return ResponseEntity.badRequest().build();
     }
 }
